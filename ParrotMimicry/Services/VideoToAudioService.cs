@@ -204,44 +204,15 @@ namespace ParrotMimicry.Services
                         // 设置重采样参数 - 使用FFmpeg 7.0兼容的API
                         // 使用新的ch_layout API设置重采样上下文
                         
-                        // 尝试使用兼容性更好的方式设置重采样上下文参数
-                        try
-                        {
-                            // 尝试使用新的API设置重采样上下文参数
-                            ffmpeg.swr_alloc_set_opts2(&swrContext, 
-                                                      &outputCodecContext->ch_layout, 
-                                                      outputCodecContext->sample_fmt, 
-                                                      outputCodecContext->sample_rate,
-                                                      &inputCodecContext->ch_layout, 
-                                                      inputCodecContext->sample_fmt, 
-                                                      inputCodecContext->sample_rate, 
-                                                      0, null);
-                        }
-                        catch (Exception ex) when (ex.Message.Contains("Specified method is not supported"))
-                        {
-                            // 如果新API不支持，回退到旧版API
-                            Console.WriteLine("新版swr_alloc_set_opts2方法不支持，回退到旧版API");
-                            // 释放之前分配的上下文
-                            if (swrContext != null)
-                            {
-                                ffmpeg.swr_free(&swrContext);
-                            }
-                            
-                            // 使用旧版API重新分配并设置
-                            swrContext = ffmpeg.swr_alloc_set_opts(
-                                null,
-                                (long)outputCodecContext->ch_layout.u.mask,
-                                outputCodecContext->sample_fmt,
-                                outputCodecContext->sample_rate,
-                                (long)inputCodecContext->ch_layout.u.mask,
-                                inputCodecContext->sample_fmt,
-                                inputCodecContext->sample_rate,
-                                0,
-                                null);
-                                
-                            if (swrContext == null)
-                                throw new Exception("无法使用旧版API分配重采样上下文");
-                        }
+                        // 使用新的API设置重采样上下文参数
+                        ffmpeg.swr_alloc_set_opts2(&swrContext, 
+                                                  &outputCodecContext->ch_layout, 
+                                                  outputCodecContext->sample_fmt, 
+                                                  outputCodecContext->sample_rate,
+                                                  &inputCodecContext->ch_layout, 
+                                                  inputCodecContext->sample_fmt, 
+                                                  inputCodecContext->sample_rate, 
+                                                  0, null);
                         // 不再需要单独设置这些参数，因为swr_alloc_set_opts2已经设置了它们
                         // 但为了确保兼容性，我们保留这些设置
                         ffmpeg.av_opt_set_int(swrContext, "in_sample_rate", inputCodecContext->sample_rate, 0);
@@ -335,27 +306,8 @@ namespace ParrotMimicry.Services
                                         throw new Exception($"无法分配输出帧缓冲区: {GetErrorMessage(bufferRet)}");
                                     }
 
-                                    // 执行重采样 - 尝试使用兼容性更好的方法
-                                    int convertRet;
-                                    try
-                                    {
-                                        // 尝试使用新版API
-                                        convertRet = ffmpeg.swr_convert_frame(swrContext, outFrame, frame);
-                                    }
-                                    catch (Exception ex) when (ex.Message.Contains("Specified method is not supported"))
-                                    {
-                                        // 如果新API不支持，回退到旧版API
-                                        Console.WriteLine("新版swr_convert_frame方法不支持，回退到旧版API");
-                                        
-                                        // 使用旧版API进行重采样
-                                        convertRet = ffmpeg.swr_convert(
-                                            swrContext,
-                                            &outFrame->data[0],
-                                            outFrame->nb_samples,
-                                            &frame->data[0],
-                                            frame->nb_samples);
-                                    }
-                                    
+                                    // 执行重采样
+                                    int convertRet = ffmpeg.swr_convert_frame(swrContext, outFrame, frame);
                                     if (convertRet < 0)
                                     {
                                         ffmpeg.av_frame_free(&outFrame);
@@ -456,15 +408,7 @@ namespace ParrotMimicry.Services
                     }
                     catch (Exception ex) when (!(ex is OperationCanceledException))
                     {
-                        // 记录详细的异常信息，包括内部异常
-                        string errorMessage = $"视频转换为音频失败: {ex.Message}";
-                        if (ex.InnerException != null)
-                        {
-                            errorMessage += $" | 内部异常: {ex.InnerException.Message}";
-                        }
-                        Console.WriteLine(errorMessage);
-                        Console.WriteLine($"异常堆栈: {ex.StackTrace}");
-                        throw new Exception(errorMessage, ex);
+                        throw new Exception($"视频转换为音频失败: {ex.Message}", ex);
                     }
                     finally
                     {
