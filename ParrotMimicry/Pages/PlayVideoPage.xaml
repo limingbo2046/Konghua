@@ -1,0 +1,84 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:local="clr-namespace:ParrotMimicry"
+             xmlns:pageView="clr-namespace:ParrotMimicry.Pages"
+             x:Class="ParrotMimicry.PlayVideoPage"
+             Title="一看二读三模仿">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <local:BoolToColorConverter x:Key="BoolToColorConverter"/>
+            <local:IndexToColorConverter x:Key="IndexToColorConverter"/>
+            <local:IndexToButtonColorConverter x:Key="IndexToButtonColorConverter"/>
+            <local:RecordingFilePathToTextConverter x:Key="RecordingFilePathToTextConverter"/>
+            <local:TimeSpanToStringConverter x:Key="TimeSpanToStringConverter"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <Grid VerticalOptions="Fill" HorizontalOptions="Fill">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <ContentView Grid.Column="0" Grid.Row="0">
+            <toolkit:MediaElement x:Name="mediaElement" 
+                          ShouldAutoPlay="True"
+                          ShouldShowPlaybackControls="True" VerticalOptions="Center"
+                                 PositionChanged="MediaElement_PositionChanged"/>
+        </ContentView>
+        <ContentView Grid.Column="1" Grid.Row="0">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="9*" />
+                    <RowDefinition Height="1*" />
+                </Grid.RowDefinitions>
+
+                <CollectionView x:Name="subtitlesList" VerticalOptions="Fill" HorizontalOptions="Fill" Scrolled="subtitlesList_Scrolled" Grid.Column="0" Grid.Row="0">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid BackgroundColor="{Binding Index, Converter={StaticResource IndexToColorConverter}}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*" />
+                                    <ColumnDefinition Width="9*" />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <Button BackgroundColor="{Binding Index,Converter={StaticResource IndexToButtonColorConverter}}" Grid.Row="0" Grid.Column="0" Text="{Binding Start,Converter={StaticResource TimeSpanToStringConverter}}" Clicked="PlayPostion_Clicked" CommandParameter="{Binding .}" Padding="-2,0,-2,0"/>
+
+                                <FlexLayout Grid.Row="0" Grid.Column="1"
+                                          BindableLayout.ItemsSource="{Binding Words}"
+                                          Wrap="Wrap"
+                                          Direction="Row"
+                                          JustifyContent="Start"
+                                          AlignItems="Start">
+                                    <BindableLayout.ItemTemplate>
+                                        <DataTemplate>
+                                            <Button Text="{Binding Text}" 
+                                                   Clicked="Word_Clicked" 
+                                                   CommandParameter="{Binding .}"
+                                                   Margin="1"
+                                                    BackgroundColor="{Binding Source={RelativeSource AncestorType={x:Type local:SubtitleItem}}, Path=IsActive, Converter={StaticResource BoolToColorConverter}}"/>
+                                        </DataTemplate>
+                                    </BindableLayout.ItemTemplate>
+                                </FlexLayout>
+
+
+                                <Editor Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" BackgroundColor="Blue" Text="{Binding Note}"/>
+                            </Grid>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+                <HorizontalStackLayout Grid.Row="1" Margin="0,5,0,0">
+                    <Button x:Name="btnReturn" Clicked="btnReturn_Clicked" Text="返回"/>
+                </HorizontalStackLayout>
+            </Grid>
+        </ContentView>
+    </Grid>
+
+</ContentPage>

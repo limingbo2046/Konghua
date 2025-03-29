@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:sys="clr-namespace:System;assembly=netstandard"
+             x:Class="ParrotMimicry.Pages.WhisperPage"
+             Title="字幕管理">
+
+    <Grid RowDefinitions="Auto,*,Auto" Padding="20">
+        <VerticalStackLayout Grid.Row="0" Spacing="20">
+            <Label Text="Whisper字幕生成器" Style="{StaticResource Headline}" HorizontalOptions="Center" />
+            
+            <HorizontalStackLayout Spacing="10" HorizontalOptions="Fill">
+                <Label Text="选择模型：" VerticalOptions="Center" />
+                <Picker x:Name="ModelPicker"
+                        HorizontalOptions="Fill"
+                        SelectedIndexChanged="OnModelSelected">
+                    <Picker.ItemsSource>
+                        <x:Array Type="{x:Type x:String}">
+                            <x:String>Tiny (最小)</x:String>
+                            <x:String>Base (基础)</x:String>
+                            <x:String>Small (小型)</x:String>
+                            <x:String>Medium (中型)</x:String>
+                            <x:String>Large (大型)</x:String>
+                            <x:String>Large V3 (大型V3)</x:String>
+                        </x:Array>
+                    </Picker.ItemsSource>
+                    <Picker.SelectedIndex>5</Picker.SelectedIndex>
+                </Picker>
+                <Button x:Name="SelectModelFileButton"
+                        Text="选择模型文件"
+                        Clicked="OnSelectModelFileClicked"
+                        HorizontalOptions="End" />
+            </HorizontalStackLayout>
+
+            <Button x:Name="SelectFolderButton"
+                    Text="添加音频文件同级全部文件"
+                    Clicked="OnSelectFolderClicked"
+                    HorizontalOptions="Fill" />
+
+            <Label x:Name="SelectedFolderLabel"
+                   Text="未选择文件夹"
+                   HorizontalOptions="Center" 
+                   BackgroundColor="{StaticResource Primary}"/>
+        </VerticalStackLayout>
+        <ListView x:Name="AudioFilesList" Grid.Row="1">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <Grid Padding="10">
+                            <Label Text="{Binding FileName}"
+                             VerticalOptions="Center" />
+                            <Label Text="{Binding Status}"
+                             HorizontalOptions="End"
+                             VerticalOptions="Center" />
+                        </Grid>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <VerticalStackLayout Grid.Row="2" Spacing="10" Margin="0,20,0,0">
+            <Button x:Name="ProcessButton"
+           Text="开始处理"
+           Clicked="OnProcessClicked"
+           IsEnabled="False"
+           HorizontalOptions="Fill" />
+            <Label x:Name="StatusLabel"
+                   Text="准备就绪"
+                   HorizontalOptions="Center" />
+        </VerticalStackLayout>
+    </Grid>
+</ContentPage>

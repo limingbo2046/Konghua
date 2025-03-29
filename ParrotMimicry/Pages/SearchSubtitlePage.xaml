@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ParrotMimicry.Pages.SearchSubtitlePage"
+             Title="搜索字幕">
+    <VerticalStackLayout Spacing="10" Padding="20">
+        <Label Text="视频文件：" />
+        <Entry x:Name="VideoFileNameEntry" Text="{Binding FileName}" />
+        <Label Text="字幕源：" />
+        <Picker x:Name="SubtitleSourcePicker" Title="选择字幕源" />
+        <Button Text="搜索字幕" Clicked="SearchSubtitle_Clicked" />
+        <ActivityIndicator x:Name="LoadingIndicator" IsRunning="False" />
+        <Label x:Name="StatusLabel" />
+        <CollectionView x:Name="SubtitlesListView" IsVisible="False">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Grid Padding="10">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Label Grid.Row="0" Text="{Binding FileName}" FontAttributes="Bold" />
+                        <Label Grid.Row="1" Text="{Binding Language}" />
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnSubtitleTapped" />
+                        </Grid.GestureRecognizers>
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+        <Button Text="返回" Clicked="Back_Clicked" Margin="0,10,0,0" />
+    </VerticalStackLayout>
+</ContentPage>

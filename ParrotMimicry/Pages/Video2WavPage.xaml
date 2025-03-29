@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ParrotMimicry.Pages.Video2WavPage"
+             Title="视频转音频">
+
+    <Grid RowDefinitions="Auto,*,Auto" Padding="20">
+        <VerticalStackLayout Grid.Row="0" Spacing="20">
+            <Label Text="视频转音频工具" Style="{StaticResource Headline}" HorizontalOptions="Center" />
+            
+            <HorizontalStackLayout Spacing="10" HorizontalOptions="Fill">
+                <Button x:Name="SelectFilesButton"
+                        Text="选择视频文件"
+                        Clicked="OnSelectFilesClicked"
+                        HorizontalOptions="FillAndExpand" />
+                
+                <Button x:Name="SelectFolderButton"
+                        Text="选择文件夹"
+                        Clicked="OnSelectFolderClicked"
+                        HorizontalOptions="FillAndExpand" />
+            </HorizontalStackLayout>
+
+            <Label x:Name="SelectedPathLabel"
+                   Text="未选择文件或文件夹"
+                   HorizontalOptions="Center" 
+                   BackgroundColor="{StaticResource Primary}"/>
+            
+            <HorizontalStackLayout Spacing="10" HorizontalOptions="Fill">
+                <Label Text="输出目录：" VerticalOptions="Center" />
+                <Entry x:Name="OutputDirectoryEntry"
+                       Placeholder="默认与视频文件相同目录"
+                       HorizontalOptions="FillAndExpand" />
+                <Button x:Name="BrowseOutputButton"
+                        Text="浏览"
+                        Clicked="OnBrowseOutputClicked" />
+            </HorizontalStackLayout>
+        </VerticalStackLayout>
+        
+        <ListView x:Name="VideoFilesList" Grid.Row="1" SelectionMode="None">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <Grid Padding="10" ColumnDefinitions="*,Auto">
+                            <VerticalStackLayout Grid.Column="0">
+                                <Label Text="{Binding FileName}"
+                                       FontAttributes="Bold"
+                                       VerticalOptions="Center" />
+                                <ProgressBar Progress="{Binding Progress}"
+                                           IsVisible="{Binding IsConverting}"
+                                           HorizontalOptions="Fill" />
+                            </VerticalStackLayout>
+                            <Button Grid.Column="1"
+                                    Text="移除"
+                                    CommandParameter="{Binding .}"
+                                    Clicked="OnRemoveFileClicked"
+                                    VerticalOptions="Center" />
+                        </Grid>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        
+        <VerticalStackLayout Grid.Row="2" Spacing="10" Margin="0,20,0,0">
+            <ProgressBar x:Name="TotalProgressBar"
+                         Progress="0"
+                         HorizontalOptions="Fill" />
+            
+            <HorizontalStackLayout Spacing="10" HorizontalOptions="Fill">
+                <Button x:Name="ConvertButton"
+                        Text="开始转换"
+                        Clicked="OnConvertClicked"
+                        IsEnabled="False"
+                        HorizontalOptions="FillAndExpand" />
+                
+                <Button x:Name="CancelButton"
+                        Text="取消"
+                        Clicked="OnCancelClicked"
+                        IsEnabled="False"
+                        HorizontalOptions="FillAndExpand" />
+            </HorizontalStackLayout>
+            
+            <Label x:Name="StatusLabel"
+                   Text="准备就绪"
+                   HorizontalOptions="Center" />
+        </VerticalStackLayout>
+    </Grid>
+</ContentPage>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ParrotMimicry.Pages.WordPage"
+             Title="WordPage">
+    <VerticalStackLayout Spacing="20" Padding="20">
+        <Label 
+            x:Name="lbl_word"
+            FontSize="24"
+            FontAttributes="Bold"
+            HorizontalOptions="Center" 
+            />
+        <Label 
+            x:Name="lbl_phonetic"
+            FontSize="18"
+            HorizontalOptions="Center" 
+            />
+        <Label 
+            x:Name="lbl_definition"
+            FontSize="16"
+            TextType="Html"
+            LineBreakMode="WordWrap"
+            HorizontalOptions="Center"
+            />
+        <HorizontalStackLayout Spacing="20" Padding="20" HorizontalOptions="Center">
+            <Button 
+                Clicked="Button_Clicked" 
+                Text="返回"
+                HorizontalOptions="Center"
+            />
+
+            <Button 
+                x:Name="btn_markLearned"
+                Clicked="MarkLearned_Clicked" 
+                Text="标记为生词并返回"
+                HorizontalOptions="Center"
+                        />
+
+        </HorizontalStackLayout>
+
+    </VerticalStackLayout>
+</ContentPage>

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ParrotMimicry.Pages.NewVocabularyPage"
+             Title="生词复习">
+    <Grid RowDefinitions="Auto,Auto,*,Auto" Padding="20">
+        <!-- 字幕显示区域 -->
+        <Grid x:Name="SubtitleGrid"
+              Grid.Row="0"
+              HorizontalOptions="Center"
+              Margin="0,20">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Label x:Name="SubtitlePrefix"
+                   Grid.Column="0"
+                   FontSize="18"
+                   VerticalOptions="Center" />
+            <Entry x:Name="SubtitleEntry"  
+                  Grid.Column="1"  
+                  FontSize="18"  
+                  WidthRequest="200"  
+                  VerticalOptions="Center"  
+                  />
+            <Label x:Name="SubtitleSuffix"
+                   Grid.Column="2"
+                   FontSize="18"
+                   VerticalOptions="Center" />
+        </Grid>
+
+        <!-- 查看答案按钮 -->
+        <Button x:Name="ShowAnswerButton"
+                Grid.Row="1"
+                Text="查看答案"
+                Clicked="OnShowAnswerClicked"
+                HorizontalOptions="Center"
+                Margin="0,10" />
+
+        <!-- 答案区域 -->
+        <VerticalStackLayout Grid.Row="2" 
+                             x:Name="AnswerSection"
+                             IsVisible="False"
+                             Spacing="10">
+            <Label x:Name="WordLabel"
+                   FontSize="24"
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center" />
+            <Label x:Name="PhoneticLabel"
+                   FontSize="18"
+                   HorizontalOptions="Center" />
+            <Label x:Name="DefinitionLabel"
+                   FontSize="16"
+                   TextType="Html"
+                   LineBreakMode="WordWrap"
+                   HorizontalOptions="Center" />
+            <CollectionView x:Name="SubtitlesCollection"
+                          HeightRequest="200">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Label Text="{Binding}"
+                               Padding="10"
+                               LineBreakMode="WordWrap" />
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </VerticalStackLayout>
+
+        <!-- 底部按钮 -->
+        <Grid Grid.Row="3" 
+              ColumnDefinitions="*,*"
+              Margin="0,20,0,0">
+            <Button Text="熟悉些"
+                    Grid.Column="0"
+                    Margin="5"
+                    Clicked="OnMoreFamiliarClicked" />
+            <Button Text="保持原样"
+                    Grid.Column="1"
+                    Margin="5"
+                    Clicked="OnKeepAsIsClicked" />
+        </Grid>
+    </Grid>
+</ContentPage>

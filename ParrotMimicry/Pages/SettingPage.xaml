@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:local="clr-namespace:ParrotMimicry"
+             xmlns:pagemodels="clr-namespace:ParrotMimicry.PageModels;assembly=ParrotMimicry"
+             x:Class="ParrotMimicry.Pages.SettingPage"
+             x:DataType="pagemodels:SettingsPageModel"
+             Title="根文件夹设置">
+
+    <ScrollView>
+        <VerticalStackLayout Spacing="10" Padding="20">
+            <Label Text="当前根文件夹：" />
+            <Label x:Name="RootFolderLabel" Text="{Binding RootFolder}" />
+            <Button Text="选择根文件夹" Command="{Binding SelectRootFolderCommand}" />
+            <Label Text="OpenSubtitles API Key：" Margin="0,20,0,0" />
+            <Entry Text="{Binding OpenSubtitlesApiKey}" Placeholder="请输入API Key" />
+            <Button Text="保存API Key" Command="{Binding SaveApiKeyCommand}" />
+            <Button Text="重置数据库" Command="{Binding InitializeDatabaseCommand}"/>
+            <ProgressBar x:Name="subtitle_progress" Progress="{Binding SubtitleProgress}"/>
+            <Label x:Name="subtitle_message" Text="{Binding SubtitleMessage}" />
+            <Button x:Name="btnExtractSubtitle" Text="全部解析字幕" Command="{Binding ExtractSubtitlesCommand}" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

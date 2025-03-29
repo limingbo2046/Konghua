@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:pageModels="clr-namespace:ParrotMimicry.PageModels;assembly=ParrotMimicry"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:converters="clr-namespace:ParrotMimicry.Converters"
+             x:Class="ParrotMimicry.Pages.ProjectPage"
+             x:DataType="pageModels:ProjectPageModel"
+             Title="课程项目"
+             >
+    <ContentPage.Resources>
+        <converters:StringToColorConverter x:Key="StringToColorConverter"/>
+    </ContentPage.Resources>
+    <ContentPage.BindingContext>
+        <pageModels:ProjectPageModel x:Name="viewModel"/>
+    </ContentPage.BindingContext>
+  
+    <Grid RowDefinitions="Auto,*">
+        <Label Text="{Binding RootFolder}" Margin="10" />
+        <Border BackgroundColor="Red"/>
+        <CollectionView Grid.Row="1" ItemsSource="{Binding RootItems}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="pageModels:TreeItem">
+                    <Grid Padding="10,5" ColumnDefinitions="Auto,*">
+                        <Label FontFamily="{DynamicResource FluentUI.FontFamily}" Text="{Binding Icon}" FontSize="22" TextColor="Blue" VerticalOptions="Start" Padding="2,2" Margin="0,-5,5,0"/>
+                        <VerticalStackLayout Grid.Column="1" Spacing="5">
+                            <Label Text="{Binding Name}">
+                                <Label.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type pageModels:ProjectPageModel}}, Path=ToggleExpandCommand}" CommandParameter="{Binding .}" />
+                                </Label.GestureRecognizers>
+                            </Label>
+                            <CollectionView ItemsSource="{Binding Children}" IsVisible="{Binding IsExpanded}">
+                                <CollectionView.ItemTemplate>
+                                    <DataTemplate x:DataType="pageModels:TreeItem">
+                                        <Grid Padding="20,5" ColumnDefinitions="Auto,*">
+                                            <Label FontFamily="{DynamicResource FluentUI.FontFamily}" Text="{Binding Icon}" FontSize="20" TextColor="Yellow" VerticalOptions="Start" Padding="2,2" Margin="0,-5,5,0" />
+                                            <VerticalStackLayout Grid.Column="1" Spacing="5">
+                                                <Label Text="{Binding Name}" >
+                                                    <Label.GestureRecognizers>
+                                                        <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type pageModels:ProjectPageModel}}, Path=ToggleExpandCommand}" CommandParameter="{Binding .}" />
+                                                    </Label.GestureRecognizers>
+                                                </Label>
+                                                <CollectionView ItemsSource="{Binding Children}" IsVisible="{Binding IsExpanded}">
+                                                    <CollectionView.ItemTemplate>
+                                                        <DataTemplate x:DataType="pageModels:TreeItem">
+                                                            <Grid Padding="30,5" ColumnDefinitions="Auto,*">
+                                                                <CheckBox Grid.Column="0" IsChecked="{Binding IsChecked}" VerticalOptions="Center" Color="LightGreen" IsEnabled="False"/>
+                                                                <HorizontalStackLayout Grid.Column="1">
+                                                                    <Button Text="{Binding FileNameWithoutExtension}" Clicked="PlayVideo_Clicked" CommandParameter="{Binding .}"/>
+                                                                    <Button Text="幕" TextColor="{Binding Icon, Converter={StaticResource StringToColorConverter}}" Clicked="SearchSubtitle_Clicked" CommandParameter="{Binding .}" Margin="5,0,5,0"/>
+                                                                    <Button Text="笔" Clicked="OpenNote_Clicked" CommandParameter="{Binding .}" Margin="0,0,5,0"/>
+                                                                    <Button Text="录" Clicked="Practice_Record_Clicked" CommandParameter="{Binding .}" Margin="0,0,5,0"/>
+                                                                </HorizontalStackLayout>
+                                                                
+                                                            </Grid>
+                                                        </DataTemplate>
+                                                    </CollectionView.ItemTemplate>
+                                                </CollectionView>
+                                            </VerticalStackLayout>
+                                        </Grid>
+                                    </DataTemplate>
+                                </CollectionView.ItemTemplate>
+                            </CollectionView>
+                        </VerticalStackLayout>
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </Grid>
+
+</ContentPage>
